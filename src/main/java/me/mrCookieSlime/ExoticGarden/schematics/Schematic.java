@@ -122,8 +122,8 @@ public class Schematic {
 				for (int z = 0; z < length; ++z) {
 					int index = y * width * length + z * width + x;
 					Block block = new Location(loc.getWorld(), x + loc.getX() - length / 2, y + loc.getY(), z + loc.getZ() - width / 2).getBlock();
-					
-					if (block.getType() == Material.AIR || block.getType() == Material.CAVE_AIR || !block.getType().isSolid()) {
+
+					if (block.getType() == Material.AIR || block.getType() == Material.CAVE_AIR || !block.getType().isSolid() && block.getType() != Material.END_PORTAL) {
 						if (parseId(blocks[index], blockData[index]) != null && !(block.getState() instanceof InventoryHolder)) {
 							if (blocks[index] != 0) {
 								block.setType(parseId(blocks[index], blockData[index]));
