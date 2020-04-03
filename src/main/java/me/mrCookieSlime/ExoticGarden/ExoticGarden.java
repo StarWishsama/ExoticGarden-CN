@@ -266,7 +266,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		new ItemStack[] {new ItemStack(Material.BEETROOT_SEEDS), new ItemStack(Material.WATER_BUCKET), null, null, null, null, null, null, null})
 		.register(this);
 
-		new SlimefunItem(Categories.MISC, new SlimefunItemStack("CORNMEAL", Material.SUGAR, "&rCornmeal"), RecipeType.GRIND_STONE,
+		new SlimefunItem(Categories.MISC, new SlimefunItemStack("CORNMEAL", Material.SUGAR, "&r玉米粉"), RecipeType.GRIND_STONE,
 		new ItemStack[] {getItem("CORN"), null, null, null, null, null, null, null, null})
 		.register(this);
 
