@@ -1,0 +1,9 @@
+grass-drops: []
+world-blacklist:
+- world_nether
+- world_the_end
+chances:
+  TREE: 22
+  BUSH: 16
+options:
+  auto-update: true
