@@ -19,8 +19,6 @@ import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.skull.SkullItem;
-import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
-import me.mrCookieSlime.Slimefun.cscorelib2.updater.Updater;
 import org.bukkit.Color;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -68,12 +66,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
 		// Setting up bStats
 		new Metrics(this, 4575);
-
-		// Setting up the Auto-Updater
-		Updater updater = new GitHubBuildsUpdater(this, getFile(), "TheBusyBiscuit/ExoticGarden/master");
-
-		// Only run the Updater if it has not been disabled
-		if (cfg.getBoolean("options.auto-update")) updater.start();
 		
 		SlimefunPlugin.getThirdPartySupportService().loadExoticGarden(this, b -> Optional.ofNullable(harvestPlant(b)));
 
@@ -228,7 +220,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		new ItemStack[] {getItem("LEMON"), getItem("ICE_CUBE"), getItem("TEA_LEAF"), null, null, null, null, null, null})
 		.register(this);
 
-		new Juice(drinksCategory, new SlimefunItemStack("VITA_LEMON_TEA", new CustomPotion("&e维他柠檬茶", Color.YELLOW, new PotionEffect(PotionEffectType.HEALTH_BOOST, 30, 0), "", "&7&o提供生命提升效果")), RecipeType.ENHANCED_CRAFTING_TABLE,
+		new Juice(drinksCategory, new SlimefunItemStack("VITA_LEMON_TEA", new CustomPotion("&e维他柠檬茶", Color.YELLOW, new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, 0), "", "&7&o提供生命提升效果")), RecipeType.ENHANCED_CRAFTING_TABLE,
 		new ItemStack[] { null, getItem("ICE_CUBE"), null, getItem("TEA_LEAF"), getItem("LEMON"), getItem("TEA_LEAF"), null, getItem("ICE_CUBE"), null, null
 		}).register(this);
 
