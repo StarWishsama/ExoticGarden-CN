@@ -67,6 +67,10 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
 		// Setting up bStats
 		new Metrics(this, 4575);
+
+		if (ReflectionUtils.getVersion().contains("1_13")){
+			getLogger().info("检测到使用 1.13 版本, 向下兼容已启用");
+		}
 		
 		SlimefunPlugin.getThirdPartySupportService().loadExoticGarden(this, b -> Optional.ofNullable(harvestPlant(b)));
 
