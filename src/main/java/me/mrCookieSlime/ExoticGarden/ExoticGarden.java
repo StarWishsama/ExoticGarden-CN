@@ -220,11 +220,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		new ItemStack[] {getItem("LEMON"), getItem("ICE_CUBE"), getItem("TEA_LEAF"), null, null, null, null, null, null})
 		.register(this);
 
-		new Juice(drinksCategory, new SlimefunItemStack("VITA_LEMON_TEA", new CustomPotion("&e维他柠檬茶", Color.YELLOW, new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, 0), "", "&7&o提供生命提升效果")), RecipeType.ENHANCED_CRAFTING_TABLE,
-		new ItemStack[] { null, getItem("ICE_CUBE"), null, getItem("TEA_LEAF"), getItem("LEMON"), getItem("TEA_LEAF"), null, getItem("ICE_CUBE"), null, null
-		}).register(this);
-
-
 		new Juice(drinksCategory, new SlimefunItemStack("RASPBERRY_ICED_TEA", new CustomPotion("&d冰镇树莓茶", Color.FUCHSIA, new PotionEffect(PotionEffectType.SATURATION, 13, 0), "", "&7&o恢复 " + "6.5" + " &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE,
 		new ItemStack[] {getItem("RASPBERRY"), getItem("ICE_CUBE"), getItem("TEA_LEAF"), null, null, null, null, null, null})
 		.register(this);
@@ -696,6 +691,15 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		new ItemStack[] {getItem("APPLE"), new ItemStack(Material.SUGAR), SlimefunItems.WHEAT_FLOUR, SlimefunItems.BUTTER, getItem("PEAR"), new ItemStack(Material.EGG), null, null, null},
 		18)
 		.register(this);
+
+		// Custom Item
+		new Juice(drinksCategory, new SlimefunItemStack("VITA_LEMON_TEA", new CustomPotion("&e维他柠檬茶", Color.YELLOW, new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, 0), "", "&7&o提供生命提升效果")), RecipeType.ENHANCED_CRAFTING_TABLE,
+				new ItemStack[] { null, getItem("ICE_CUBE"), null, getItem("TEA_LEAF"), getItem("LEMON"), getItem("TEA_LEAF"), null, getItem("ICE_CUBE"), null, null
+				}).register(this);
+
+		new Juice(drinksCategory, new SlimefunItemStack("VITA_LEMON_TEA", new CustomPotion("&c冰可乐", Color.BLACK, new PotionEffect(PotionEffectType.SPEED, 1200, 0), "", "&7+ 速度加成", "", "&7&o上面贴着&c&o可口可乐&7&o的字样", "&7&o撕开后发现是&b&o百事", "&7&o这到底是什么可乐呢...")), RecipeType.ENHANCED_CRAFTING_TABLE,
+				new ItemStack[] { null, getItem("ICE_CUBE"), null, new CustomItem(Material.SUGAR), new CustomItem(Material.COCOA_BEANS), new CustomItem(Material.SUGAR), null, getItem("ICE_CUBE"), null, null
+				}).register(this);
 	}
 
 	@Override
