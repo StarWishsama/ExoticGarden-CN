@@ -50,12 +50,14 @@ public class PlantsListener implements Listener {
 		if (item != null) {
 			e.setCancelled(true);
 			if (!e.getLocation().getChunk().isLoaded()) e.getLocation().getWorld().loadChunk(e.getLocation().getChunk());
-			
-			for (Tree tree : ExoticGarden.getTrees()) {
-				if (item.getID().equalsIgnoreCase(tree.getSapling())) {
-					BlockStorage.clearBlockInfo(e.getLocation());
-					Schematic.pasteSchematic(e.getLocation(), tree);
-					return;
+
+			if (e.getLocation().getWorld().getHighestBlockAt(e.getLocation()).getType() != Material.BEDROCK) {
+				for (Tree tree : ExoticGarden.getTrees()) {
+					if (item.getID().equalsIgnoreCase(tree.getSapling())) {
+						BlockStorage.clearBlockInfo(e.getLocation());
+						Schematic.pasteSchematic(e.getLocation(), tree);
+						return;
+					}
 				}
 			}
 			
