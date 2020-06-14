@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 import io.github.thebusybiscuit.slimefun4.implementation.items.food.Juice;
 import io.papermc.lib.PaperLib;
+import me.mrCookieSlime.CSCoreLibPlugin.cscorelib2.reflection.ReflectionUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomPotion;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
@@ -74,6 +75,10 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
 		    Updater updater = new GitHubBuildsUpdater(this, getFile(), "TheBusyBiscuit/ExoticGarden/master");
 		    updater.start();
+		}
+
+		if (ReflectionUtils.getVersion().contains("1_13")){
+			getLogger().info("检测到使用 1.13 版本, 向下兼容已启用");
 		}
 		
 		SlimefunPlugin.getThirdPartySupportService().loadExoticGarden(this, b -> Optional.ofNullable(harvestPlant(b)));
@@ -514,10 +519,12 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		13)
 		.register(this);
 
-		new CustomFood(foodCategory, new SlimefunItemStack("SWEET_BERRY_PANCAKES", "e44ca99e308a186b30281b2017c44189acafb591152f81feea96fecbe57", "&r浆果煎饼", "", "&7&o恢复 &b&o" + "6.5" + " &7&o点饥饿值"),
-		new ItemStack[] {getItem("PANCAKES"), new ItemStack(Material.SWEET_BERRIES), null, null, null, null, null, null, null},
-		13)
-		.register(this);
+		if (!ReflectionUtils.getVersion().contains("1_13")) {
+			new CustomFood(foodCategory, new SlimefunItemStack("SWEET_BERRY_PANCAKES", "e44ca99e308a186b30281b2017c44189acafb591152f81feea96fecbe57", "&r浆果煎饼", "", "&7&o恢复 &b&o" + "6.5" + " &7&o点饥饿值"),
+					new ItemStack[]{getItem("PANCAKES"), new ItemStack(Material.SWEET_BERRIES), null, null, null, null, null, null, null},
+					13)
+					.register(this);
+		}
 
 		new CustomFood(foodCategory, new SlimefunItemStack("FRIES", "563b8aeaf1df11488efc9bd303c233a87ccba3b33f7fba9c2fecaee9567f053", "&r薯条", "", "&7&o恢复 &b&o" + "6.0" + " &7&o点饥饿值"),
 		new ItemStack[] {new ItemStack(Material.POTATO), getItem("SALT"), null, null, null, null, null, null, null},
