@@ -1,10 +1,10 @@
 # 异域花园（ExoticGarden）
 
-异域花园（ExoticGarden）是 [粘液科技](https://github.com/TheBusyBiscuit/Slimefun4) 的一个大插件，它带来了各种新的植物，水果，蔬菜和食品。
+异域花园（ExoticGarden）是 [粘液科技](https://github.com/StarWishsama/Slimefun4) 的扩展插件，它带来了各种新的植物，水果，蔬菜和食品。
 https://dev.bukkit.org/projects/exotic-garden
 
 异域花园遵从
-[MIT License](https://github.com/TheBusyBiscuit/ExoticGarden/blob/master/LICENSE)
+[MIT License](https://github.com/StarWishsama/ExoticGarden-CN/blob/master/LICENSE)
 
 ## 开发版
 单击下面的按钮，进入我们的“开发”构建页面，您可以下载最新的开发版版本。 但请记住：这些开发版仍在开发中，不保证能正常工作或保持稳定。
