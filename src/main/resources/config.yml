@@ -5,3 +5,5 @@ world-blacklist:
 chances:
   TREE: 22
   BUSH: 16
+options:
+  auto-update: false
