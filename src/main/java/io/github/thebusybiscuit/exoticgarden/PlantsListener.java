@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -64,6 +65,10 @@ public class PlantsListener implements Listener {
     public void onGenerate(ChunkPopulateEvent e) {
 
         final World world = e.getWorld();
+
+        if (!BlockStorage.isWorldRegistered(world.getName())) {
+            return;
+        }
 
         if (!SlimefunPlugin.getWorldSettingsService().isWorldEnabled(world)) {
             return;
@@ -329,7 +334,10 @@ public class PlantsListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || e.getPlayer().isSneaking()) return;
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
+        if (e.getPlayer().isSneaking()) return;
+
         if (SlimefunPlugin.getProtectionManager().hasPermission(e.getPlayer(), e.getClickedBlock().getLocation(), ProtectableAction.BREAK_BLOCK)) {
             ItemStack item = ExoticGarden.harvestPlant(e.getClickedBlock());
 
@@ -370,18 +378,21 @@ public class PlantsListener implements Listener {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
                     // inspect a cube at the reference
-                    Block drop = block.getRelative(x, y, z);
-                    SlimefunItem check = BlockStorage.check(drop);
+                    Block fruit = block.getRelative(x, y, z);
+                    if (fruit.isEmpty()) continue;
 
-                    if (check != null) {
-                        for (Tree tree : ExoticGarden.getTrees()) {
-                            if (check.getID().equalsIgnoreCase(tree.getFruitID())) {
-                                BlockStorage.clearBlockInfo(drop);
-                                ItemStack fruits = check.getItem();
-                                drop.getWorld().playEffect(drop.getLocation(), Effect.STEP_SOUND, Material.OAK_LEAVES);
-                                drop.getWorld().dropItemNaturally(drop.getLocation(), fruits);
-                                drop.setType(Material.AIR);
-                            }
+                    Location loc = fruit.getLocation();
+                    SlimefunItem check = BlockStorage.check(loc);
+                    if (check == null) continue;
+
+                    for (Tree tree : ExoticGarden.getTrees()) {
+                        if (check.getID().equalsIgnoreCase(tree.getFruitID())) {
+                            BlockStorage.clearBlockInfo(loc);
+                            ItemStack fruits = check.getItem();
+                            fruit.getWorld().playEffect(loc, Effect.STEP_SOUND, Material.OAK_LEAVES);
+                            fruit.getWorld().dropItemNaturally(loc, fruits);
+                            fruit.setType(Material.AIR);
+                            break;
                         }
                     }
                 }

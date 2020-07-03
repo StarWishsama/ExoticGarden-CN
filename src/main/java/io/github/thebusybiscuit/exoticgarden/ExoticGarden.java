@@ -9,7 +9,6 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomPotion;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.HandledBlock;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
@@ -850,54 +849,46 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		recipe)
 		.register(this);
 
-		HandledBlock plant = new HandledBlock(magicalCategory, essence, RecipeType.ENHANCED_CRAFTING_TABLE,
-		new ItemStack[] {essence, essence, essence, essence, null, essence, essence, essence, essence});
+		MagicalEssence magicalEssence = new MagicalEssence(magicalCategory, essence);
 
-		plant.setRecipeOutput(item.clone());
-		plant.register(this);
+		magicalEssence.setRecipeOutput(item.clone());
+		magicalEssence.register(this);
 	}
 
 	public static ItemStack harvestPlant(Block block) {
-		ItemStack itemstack = null;
 		SlimefunItem item = BlockStorage.check(block);
-		
-		if (item != null) {
-			for (Berry berry : instance.berries) {
-				if (item.getID().equalsIgnoreCase(berry.getID())) {
-					switch (berry.getType()) {
-						case ORE_PLANT:
-						case DOUBLE_PLANT:
-							Block plant = block;
-							
-							if (BlockStorage.check(block.getRelative(BlockFace.DOWN)) == null) {
-								BlockStorage.clearBlockInfo(block.getRelative(BlockFace.UP));
-								block.getWorld().playEffect(block.getRelative(BlockFace.UP).getLocation(), Effect.STEP_SOUND, Material.OAK_LEAVES);
-								block.getRelative(BlockFace.UP).setType(Material.AIR);
-							}
-							else {
-								plant = block.getRelative(BlockFace.DOWN);
-								BlockStorage.clearBlockInfo(block);
-								block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, Material.OAK_LEAVES);
-								block.setType(Material.AIR);
-							}
-							
-							plant.setType(Material.OAK_SAPLING);
-							itemstack = berry.getItem();
-							BlockStorage._integrated_removeBlockInfo(plant.getLocation(), false);
-							BlockStorage.store(plant, getItem(berry.toBush()));
-							break;
-						default:
-							block.setType(Material.OAK_SAPLING);
-							itemstack = berry.getItem();
-							BlockStorage._integrated_removeBlockInfo(block.getLocation(), false);
-							BlockStorage.store(block, getItem(berry.toBush()));
-							break;
-					}
+		if (item == null) return null;
+
+		for (Berry berry : getBerries()) {
+			if (item.getID().equalsIgnoreCase(berry.getID())) {
+				switch (berry.getType()) {
+					case ORE_PLANT:
+					case DOUBLE_PLANT:
+						Block plant = block;
+
+						if (Tag.LEAVES.isTagged(block.getType()))
+							block = block.getRelative(BlockFace.UP);
+						else
+							plant = block.getRelative(BlockFace.DOWN);
+
+						BlockStorage._integrated_removeBlockInfo(block.getLocation(), false);
+						block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, Material.OAK_LEAVES);
+						block.setType(Material.AIR);
+
+						plant.setType(Material.OAK_SAPLING);
+						BlockStorage._integrated_removeBlockInfo(plant.getLocation(), false);
+						BlockStorage.store(plant, getItem(berry.toBush()));
+						return berry.getItem();
+					default:
+						block.setType(Material.OAK_SAPLING);
+						BlockStorage._integrated_removeBlockInfo(block.getLocation(), false);
+						BlockStorage.store(block, getItem(berry.toBush()));
+						return berry.getItem();
 				}
 			}
 		}
-		
-		return itemstack;
+
+		return null;
 	}
 
 	public static ExoticGarden getInstance() {
