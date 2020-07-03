@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.thebusybiscuit</groupId>
     <artifactId>ExoticGarden</artifactId>
-    <version>DEV - 51 (git 17d2d47d)</version>
+    <version>DEV - 54 (git 304c3908)</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
