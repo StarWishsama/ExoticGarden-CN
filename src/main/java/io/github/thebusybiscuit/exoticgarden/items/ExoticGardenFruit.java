@@ -1,9 +1,9 @@
 package io.github.thebusybiscuit.exoticgarden.items;
 
+import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
-public class ExoticGardenFruit extends SlimefunItem {
+public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
 
     private final boolean edible;
 
@@ -24,17 +24,12 @@ public class ExoticGardenFruit extends SlimefunItem {
     }
 
     @Override
-    public void preRegister() {
-        addItemHandler(onRightClick());
-        super.preRegister();
-    }
-
-    @Override
     public boolean useVanillaBlockBreaking() {
         return true;
     }
 
-    public ItemUseHandler onRightClick() {
+    @Override
+    public ItemUseHandler getItemHandler() {
         return e -> {
             Optional<Block> block = e.getClickedBlock();
 
@@ -61,18 +56,18 @@ public class ExoticGardenFruit extends SlimefunItem {
         // We cannot rely on Material#isInteractable() sadly
         // as it would allow the placement of this block on strange items like stairs...
         switch (material) {
-        case ANVIL:
-        case BREWING_STAND:
-        case CAKE:
-        case CHEST:
-        case HOPPER:
-        case TRAPPED_CHEST:
-        case ENDER_CHEST:
-        case CAULDRON:
-        case SHULKER_BOX:
-            return true;
-        default:
-            return material.name().equals("BARREL") || material.name().endsWith("_SHULKER_BOX");
+            case ANVIL:
+            case BREWING_STAND:
+            case CAKE:
+            case CHEST:
+            case HOPPER:
+            case TRAPPED_CHEST:
+            case ENDER_CHEST:
+            case CAULDRON:
+            case SHULKER_BOX:
+                return true;
+            default:
+                return material.name().equals("BARREL") || material.name().endsWith("_SHULKER_BOX");
         }
     }
 

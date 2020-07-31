@@ -2,10 +2,10 @@ package io.github.thebusybiscuit.exoticgarden.items;
 
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
 import io.github.thebusybiscuit.slimefun4.core.multiblocks.MultiBlockMachine;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
@@ -56,7 +56,7 @@ public class Kitchen extends MultiBlockMachine {
                 boolean canFit = furnaceInventory.getResult() == null || (furnaceInventory.getResult().getAmount() + adding.getAmount() <= 64 && SlimefunUtils.isItemSimilar(furnaceInventory.getResult(), adding, true));
 
                 if (!canFit) {
-                    SlimefunPlugin.getLocal().sendMessage(p, "machines.full-inventory", true);
+                    SlimefunPlugin.getLocalization().sendMessage(p, "machines.full-inventory", true);
                     return;
                 }
 
@@ -85,7 +85,7 @@ public class Kitchen extends MultiBlockMachine {
             return;
         }
 
-        SlimefunPlugin.getLocal().sendMessage(p, "machines.pattern-not-found", true);
+        SlimefunPlugin.getLocalization().sendMessage(p, "machines.pattern-not-found", true);
     }
 
     private static Furnace locateFurnace(Block b) {
