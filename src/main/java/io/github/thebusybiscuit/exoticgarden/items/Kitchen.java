@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Kitchen extends MultiBlockMachine {
 
-    private ExoticGarden plugin;
+    private final ExoticGarden plugin;
 
     public Kitchen(ExoticGarden plugin, Category category) {
         super(category, new SlimefunItemStack("KITCHEN", Material.CAULDRON, "&e厨房", "", "&a&o你可以在此做出各式各样的美味!", "&a&o做好的成品可以在熔炉里获取"), new ItemStack[] { new CustomItem(Material.BRICK_STAIRS, "&o红砖块 (倒放)"), new CustomItem(Material.BRICK_STAIRS, "&o红砖块 (倒放)"), new ItemStack(Material.BRICKS), new ItemStack(Material.STONE_PRESSURE_PLATE), new ItemStack(Material.IRON_TRAPDOOR), new ItemStack(Material.BOOKSHELF), new ItemStack(Material.FURNACE), new ItemStack(Material.DISPENSER), new ItemStack(Material.CRAFTING_TABLE) }, new ItemStack[0], BlockFace.SELF);
