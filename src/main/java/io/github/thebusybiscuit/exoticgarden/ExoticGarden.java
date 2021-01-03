@@ -236,7 +236,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		Tree tree = new Tree(id, texture, soil);
 		trees.add(tree);
 
-		SlimefunItemStack sapling = new SlimefunItemStack(id + "_SAPLING", Material.OAK_SAPLING, color + name + " Sapling");
+		SlimefunItemStack sapling = new SlimefunItemStack(id + "_SAPLING", Material.OAK_SAPLING, color + name + " 树苗");
 
 		items.put(id + "_SAPLING", sapling);
 
