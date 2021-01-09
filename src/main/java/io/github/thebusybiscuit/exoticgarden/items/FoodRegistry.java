@@ -92,7 +92,7 @@ public final class FoodRegistry {
                 new ItemStack[] {new ItemStack(Material.BEETROOT_SEEDS), new ItemStack(Material.WATER_BUCKET), null, null, null, null, null, null, null})
                 .register(plugin);
 
-        new SlimefunItem(misc, new SlimefunItemStack("CORNMEAL", Material.SUGAR, "&rCornmeal"), RecipeType.GRIND_STONE,
+        new SlimefunItem(misc, new SlimefunItemStack("CORNMEAL", Material.SUGAR, "&r棒子面"), RecipeType.GRIND_STONE,
                 new ItemStack[] {getItem("CORN"), null, null, null, null, null, null, null, null})
                 .register(plugin);
 
