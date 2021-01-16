@@ -1,5 +1,9 @@
-package io.github.thebusybiscuit.exoticgarden;
+package io.github.thebusybiscuit.exoticgarden.listeners;
 
+import io.github.thebusybiscuit.exoticgarden.Berry;
+import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
+import io.github.thebusybiscuit.exoticgarden.PlantType;
+import io.github.thebusybiscuit.exoticgarden.Tree;
 import io.github.thebusybiscuit.exoticgarden.schematics.Schematic;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
@@ -41,7 +45,7 @@ public class PlantsListener implements Listener {
 
     public PlantsListener(ExoticGarden plugin) {
         this.plugin = plugin;
-        cfg = plugin.cfg;
+        cfg = plugin.getCfg();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -140,7 +144,7 @@ public class PlantsListener implements Listener {
         if (item != null) {
             e.setCancelled(true);
             for (Tree tree : ExoticGarden.getTrees()) {
-                if (item.getID().equalsIgnoreCase(tree.getSapling())) {
+                if (item.getId().equalsIgnoreCase(tree.getSapling())) {
                     BlockStorage.clearBlockInfo(e.getLocation());
                     Schematic.pasteSchematic(e.getLocation(), tree);
                     return;
@@ -148,7 +152,7 @@ public class PlantsListener implements Listener {
             }
 
             for (Berry berry : ExoticGarden.getBerries()) {
-                if (item.getID().equalsIgnoreCase(berry.toBush())) {
+                if (item.getId().equalsIgnoreCase(berry.toBush())) {
                     switch (berry.getType()) {
                         case BUSH:
                             e.getLocation().getBlock().setType(Material.OAK_LEAVES);
@@ -392,7 +396,7 @@ public class PlantsListener implements Listener {
                     if (check == null) continue;
 
                     for (Tree tree : ExoticGarden.getTrees()) {
-                        if (check.getID().equalsIgnoreCase(tree.getFruitID())) {
+                        if (check.getId().equalsIgnoreCase(tree.getFruitID())) {
                             BlockStorage.clearBlockInfo(loc);
                             ItemStack fruits = check.getItem();
                             fruit.getWorld().playEffect(loc, Effect.STEP_SOUND, Material.OAK_LEAVES);

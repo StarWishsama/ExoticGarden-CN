@@ -1,10 +1,10 @@
 package io.github.thebusybiscuit.exoticgarden;
 
 import io.github.thebusybiscuit.exoticgarden.items.*;
+import io.github.thebusybiscuit.exoticgarden.listeners.PlantsListener;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.implementation.items.food.Juice;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomPotion;
@@ -12,7 +12,6 @@ import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
@@ -81,8 +80,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		if (ReflectionUtils.getVersion().contains("1_13")){
 			getLogger().info("检测到使用 1.13 版本, 向下兼容已启用");
 		}
-		
-		SlimefunPlugin.getThirdPartySupportService().loadExoticGarden(this, b -> Optional.ofNullable(harvestPlant(b)));
 
 		mainCategory = new Category(new NamespacedKey(this, "plants_and_fruits"), new CustomItem(SkullItem.fromHash("a5a5c4a0a16dabc9b1ec72fc83e23ac15d0197de61b138babca7c8a29c820"), "&a异域花园 - 植物和水果"));
 		miscCategory = new Category(new NamespacedKey(this, "misc"), new CustomItem(SkullItem.fromHash("606be2df2122344bda479feece365ee0e9d5da276afa0e8ce8d848f373dd131"), "&a异域花园 - 配料和工具"));
@@ -277,7 +274,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
                 }
 			}
 		} catch (IOException e) {
-			Slimefun.getLogger().log(Level.SEVERE, e, () -> "Failed to load file: \"" + id + ".schematic\"");
+			getLogger().log(Level.SEVERE, e, () -> "Failed to load file: \"" + id + ".schematic\"");
 		}
 	}
 
@@ -369,7 +366,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		}
 
 		for (Berry berry : getBerries()) {
-			if (item.getID().equalsIgnoreCase(berry.getID())) {
+			if (item.getId().equalsIgnoreCase(berry.getID())) {
 				switch (berry.getType()) {
 					case ORE_PLANT:
 					case DOUBLE_PLANT:
@@ -423,6 +420,10 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
 	public static Map<String, ItemStack> getGrassDrops() {
 		return instance.items;
+	}
+
+	public Config getCfg() {
+		return cfg;
 	}
 
 	@Override
