@@ -13,29 +13,32 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class GrassSeeds extends SimpleSlimefunItem<ItemUseHandler> {
 
+	@ParametersAreNonnullByDefault
 	public GrassSeeds(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
 		super(category, item, recipeType, recipe);
 	}
-	
+
 	@Override
 	public ItemUseHandler getItemHandler() {
 		return e -> {
 			if (e.getClickedBlock().isPresent()) {
 				Block b = e.getClickedBlock().get();
-				
+
 				if (b.getType() == Material.DIRT) {
 					if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
 						ItemUtils.consumeItem(e.getItem(), false);
 					}
-					
+
 					b.setType(Material.GRASS_BLOCK);
-					
+
 					if (b.getRelative(BlockFace.UP).getType() == Material.AIR) {
 						b.getRelative(BlockFace.UP).setType(Material.GRASS);
 					}
-					
+
 					b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, Material.GRASS);
 				}
 			}

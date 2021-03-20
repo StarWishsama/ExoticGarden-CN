@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden;
 
 import io.github.thebusybiscuit.exoticgarden.items.*;
+import io.github.thebusybiscuit.exoticgarden.listeners.AndroidListener;
 import io.github.thebusybiscuit.exoticgarden.listeners.PlantsListener;
 import io.github.thebusybiscuit.slimefun4.api.MinecraftVersion;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
@@ -47,6 +48,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 	private final List<Berry> berries = new ArrayList<>();
 	private final List<Tree> trees = new ArrayList<>();
 	private final Map<String, ItemStack> items = new HashMap<>();
+	private final Set<String> treeFruits = new HashSet<>();
 
 	protected Config cfg;
 
@@ -82,6 +84,13 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 			getLogger().info("检测到使用 1.13 版本, 向下兼容已启用");
 		}
 
+		registerItems();
+
+		new AndroidListener(this);
+		new PlantsListener(this);
+		}
+
+	private void registerItems() {
 		mainCategory = new Category(new NamespacedKey(this, "plants_and_fruits"), new CustomItem(SkullItem.fromHash("a5a5c4a0a16dabc9b1ec72fc83e23ac15d0197de61b138babca7c8a29c820"), "&a异域花园 - 植物和水果"));
 		miscCategory = new Category(new NamespacedKey(this, "misc"), new CustomItem(SkullItem.fromHash("606be2df2122344bda479feece365ee0e9d5da276afa0e8ce8d848f373dd131"), "&a异域花园 - 配料和工具"));
         foodCategory = new Category(new NamespacedKey(this, "food"), new CustomItem(SkullItem.fromHash("a14216d10714082bbe3f412423e6b19232352f4d64f9aca3913cb46318d3ed"), "&a异域花园 - 食物"));
@@ -206,8 +215,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		new ItemStack[] {null, null, null, null, new ItemStack(Material.GRASS), null, null, null, null})
 		.register(this);
 
-		new PlantsListener(this);
-
 		items.put("WHEAT_SEEDS", new ItemStack(Material.WHEAT_SEEDS));
 		items.put("PUMPKIN_SEEDS", new ItemStack(Material.PUMPKIN_SEEDS));
 		items.put("MELON_SEEDS", new ItemStack(Material.MELON_SEEDS));
@@ -222,10 +229,16 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 			cfg.setDefaultValue("grass-drops." + key, true);
-			if (!cfg.getBoolean("grass-drops." + key)) iterator.remove();
+			if (!cfg.getBoolean("grass-drops." + key)) {
+				iterator.remove();
+			}
 		}
 		
 		cfg.save();
+
+		for (Tree tree : ExoticGarden.getTrees()) {
+			treeFruits.add(tree.getFruitID());
+		}
 	}
 
 	@Override
@@ -242,7 +255,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
 		items.put(id + "_SAPLING", sapling);
 
-		new SlimefunItem(mainCategory, sapling, ExoticGardenRecipeTypes.BREAKING_GRASS,
+		new BonemealableItem(mainCategory, sapling, ExoticGardenRecipeTypes.BREAKING_GRASS,
 		new ItemStack[] {null, null, null, null, new ItemStack(Material.GRASS), null, null, null, null})
 		.register(this);
 
@@ -292,7 +305,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
 		items.put(upperCase + "_BUSH", sfi);
 
-		new SlimefunItem(mainCategory, sfi, ExoticGardenRecipeTypes.BREAKING_GRASS,
+		new BonemealableItem(mainCategory, sfi, ExoticGardenRecipeTypes.BREAKING_GRASS,
 		new ItemStack[] {null, null, null, null, new ItemStack(Material.GRASS), null, null, null, null})
 		.register(this);
 
@@ -319,7 +332,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		.register(this);
 	}
 
-	@Nonnull
+	@Nullable
 	private static ItemStack getItem(@Nonnull String id) {
 		SlimefunItem item = SlimefunItem.getByID(id);
 		return item != null ? item.getItem() : null;
@@ -335,7 +348,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		SlimefunItemStack bush = new SlimefunItemStack(enumStyle + "_BUSH", Material.OAK_SAPLING, color + name + "植物");
 		items.put(upperCase + "_BUSH", bush);
 
-		new SlimefunItem(mainCategory, bush, ExoticGardenRecipeTypes.BREAKING_GRASS,
+		new BonemealableItem(mainCategory, bush, ExoticGardenRecipeTypes.BREAKING_GRASS,
 		new ItemStack[] {null, null, null, null, new ItemStack(Material.GRASS), null, null, null, null})
 		.register(this);
 
@@ -353,7 +366,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		Berry berry = new Berry(essence, upperCase + "_ESSENCE", PlantType.ORE_PLANT, texture);
 		berries.add(berry);
 
-		new SlimefunItem(magicalCategory, new SlimefunItemStack(enumStyle + "_PLANT", Material.OAK_SAPLING, "&r" + name + "植物"), RecipeType.ENHANCED_CRAFTING_TABLE,
+		new BonemealableItem(magicalCategory, new SlimefunItemStack(enumStyle + "_PLANT", Material.OAK_SAPLING, "&r" + name + "植物"), RecipeType.ENHANCED_CRAFTING_TABLE,
 		recipe)
 		.register(this);
 
@@ -401,6 +414,23 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 		}
 
 		return null;
+	}
+
+	public void harvestFruit(Block fruit) {
+		Location loc = fruit.getLocation();
+		SlimefunItem check = BlockStorage.check(loc);
+
+		if (check == null) {
+			return;
+		}
+
+		if (treeFruits.contains(check.getId())) {
+			BlockStorage.clearBlockInfo(loc);
+			ItemStack fruits = check.getItem().clone();
+			fruit.getWorld().playEffect(loc, Effect.STEP_SOUND, Material.OAK_LEAVES);
+			fruit.getWorld().dropItemNaturally(loc, fruits);
+			fruit.setType(Material.AIR);
+		}
 	}
 
 	public static ExoticGarden getInstance() {

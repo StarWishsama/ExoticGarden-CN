@@ -4,6 +4,7 @@ import io.github.thebusybiscuit.exoticgarden.Berry;
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
 import io.github.thebusybiscuit.exoticgarden.PlantType;
 import io.github.thebusybiscuit.exoticgarden.Tree;
+import io.github.thebusybiscuit.exoticgarden.items.BonemealableItem;
 import io.github.thebusybiscuit.exoticgarden.schematics.Schematic;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
@@ -20,10 +21,7 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
@@ -354,6 +352,9 @@ public class PlantsListener implements Listener {
             if (item != null) {
                 e.getClickedBlock().getWorld().playEffect(e.getClickedBlock().getLocation(), Effect.STEP_SOUND, Material.OAK_LEAVES);
                 e.getClickedBlock().getWorld().dropItemNaturally(e.getClickedBlock().getLocation(), item);
+            } else {
+                // The block wasn't a plant, we try harvesting a fruit instead
+                ExoticGarden.getInstance().harvestFruit(e.getClickedBlock());
             }
         }
     }
@@ -366,6 +367,20 @@ public class PlantsListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent e) {
         e.blockList().removeAll(getAffectedBlocks(e.blockList()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBonemealPlant(BlockFertilizeEvent e) {
+        Block b = e.getBlock();
+        if (b.getType() == Material.OAK_SAPLING) {
+            SlimefunItem item = BlockStorage.check(b);
+
+            if (item instanceof BonemealableItem && ((BonemealableItem) item).isBonemealDisabled()) {
+                e.setCancelled(true);
+                b.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, b.getLocation().clone().add(0.5, 0, 0.5), 4);
+                b.getWorld().playSound(b.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+            }
+        }
     }
 
     private Set<Block> getAffectedBlocks(List<Block> blockList) {
