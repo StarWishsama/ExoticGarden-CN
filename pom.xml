@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.thebusybiscuit</groupId>
     <artifactId>ExoticGarden</artifactId>
-    <version>DEV - 75 (git 6c3e5412)</version>
+    <version>DEV - 78 (git 7f9a5f63)</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.github.slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-21</version>
+            <version>RC-27</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
