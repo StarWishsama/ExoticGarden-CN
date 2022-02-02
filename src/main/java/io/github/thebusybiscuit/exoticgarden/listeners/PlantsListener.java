@@ -298,6 +298,13 @@ public class PlantsListener implements Listener {
                 if (item != null) {
                     e.setCancelled(true);
                     e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), item);
+                }else {
+                    //Fix for https://github.com/TheBusyBiscuit/ExoticGarden/issues/229
+                    Block upperBlock=e.getBlock().getRelative(BlockFace.UP);
+                    SlimefunItem upperBlockItem = BlockStorage.check(upperBlock);
+                    if(upperBlockItem!=null){
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
