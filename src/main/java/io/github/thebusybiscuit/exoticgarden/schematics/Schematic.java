@@ -3,9 +3,10 @@ package io.github.thebusybiscuit.exoticgarden.schematics;
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
 import io.github.thebusybiscuit.exoticgarden.Tree;
 import io.github.thebusybiscuit.exoticgarden.schematics.org.jnbt.*;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.skull.SkullBlock;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -148,7 +149,7 @@ public class Schematic {
                                 s.setRotation(faces[ThreadLocalRandom.current().nextInt(faces.length)]);
                                 block.setBlockData(s);
 
-                                SkullBlock.setFromHash(block, tree.getTexture());
+                                PlayerHead.setSkin(block, PlayerSkin.fromHashCode(tree.getTexture()), true);
                                 BlockStorage.store(block, tree.getFruit());
                             }
                         }

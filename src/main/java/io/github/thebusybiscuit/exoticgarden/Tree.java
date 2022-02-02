@@ -1,7 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden;
 
 import io.github.thebusybiscuit.exoticgarden.schematics.Schematic;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,50 +12,50 @@ import java.util.List;
 
 public class Tree {
 
-	private final String sapling;
-	private final String texture;
-	private final String fruit;
-	private final List<Material> soils;
-	
-	private Schematic schematic;
+    private final String sapling;
+    private final String texture;
+    private final String fruit;
+    private final List<Material> soils;
 
-	public Tree(String fruit, String texture, Material... soil) {
-		this.sapling = fruit + "_SAPLING";
-		this.texture = texture;
-		this.fruit = fruit;
-		this.soils = Arrays.asList(soil);
-	}
+    private Schematic schematic;
 
-	public Schematic getSchematic() throws IOException {
-	    if (schematic == null) {
-			schematic = Schematic.loadSchematic(new File(ExoticGarden.getInstance().getSchematicsFolder(), fruit + "_TREE.schematic"));
-	    }
-		
-		return schematic;
-	}
+    public Tree(String fruit, String texture, Material... soil) {
+        this.sapling = fruit + "_SAPLING";
+        this.texture = texture;
+        this.fruit = fruit;
+        this.soils = Arrays.asList(soil);
+    }
 
-	public ItemStack getItem() {
-		return SlimefunItem.getByID(sapling).getItem();
-	}
+    public Schematic getSchematic() throws IOException {
+        if (schematic == null) {
+            schematic = Schematic.loadSchematic(new File(ExoticGarden.getInstance().getSchematicsFolder(), fruit + "_TREE.schematic"));
+        }
 
-	public String getTexture() {
-		return this.texture;
-	}
+        return schematic;
+    }
 
-	public ItemStack getFruit() {
-		return SlimefunItem.getByID(fruit).getItem();
-	}
-	
-	public String getFruitID() {
-		return fruit;
-	}
+    public ItemStack getItem() {
+        return SlimefunItem.getById(sapling).getItem();
+    }
 
-	public String getSapling() {
-		return this.sapling;
-	}
+    public String getTexture() {
+        return this.texture;
+    }
 
-	public boolean isSoil(Material material) {
-		return soils.contains(material);
-	}
+    public ItemStack getFruit() {
+        return SlimefunItem.getById(fruit).getItem();
+    }
+
+    public String getFruitID() {
+        return fruit;
+    }
+
+    public String getSapling() {
+        return this.sapling;
+    }
+
+    public boolean isSoil(Material material) {
+        return soils.contains(material);
+    }
 
 }

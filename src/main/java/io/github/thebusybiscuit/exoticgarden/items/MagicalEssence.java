@@ -1,15 +1,18 @@
 package io.github.thebusybiscuit.exoticgarden.items;
 
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public class MagicalEssence extends SlimefunItem {
 
-    public MagicalEssence(Category category, SlimefunItemStack item) {
-        super(category, item, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] { item, item, item, item, null, item, item, item, item });
+    @ParametersAreNonnullByDefault
+    public MagicalEssence(ItemGroup itemGroup, SlimefunItemStack item) {
+        super(itemGroup, item, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{item, item, item, item, null, item, item, item, item});
     }
 
     @Override

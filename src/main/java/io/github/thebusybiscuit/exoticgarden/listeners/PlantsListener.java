@@ -6,13 +6,14 @@ import io.github.thebusybiscuit.exoticgarden.PlantType;
 import io.github.thebusybiscuit.exoticgarden.Tree;
 import io.github.thebusybiscuit.exoticgarden.items.BonemealableItem;
 import io.github.thebusybiscuit.exoticgarden.schematics.Schematic;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import me.mrCookieSlime.Slimefun.cscorelib2.skull.SkullBlock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,7 +40,7 @@ public class PlantsListener implements Listener {
 
     private final Config cfg;
     private final ExoticGarden plugin;
-    private final BlockFace[] faces = { BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST };
+    private final BlockFace[] faces = {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST};
 
     public PlantsListener(ExoticGarden plugin) {
         this.plugin = plugin;
@@ -52,12 +53,10 @@ public class PlantsListener implements Listener {
         if (PaperLib.isPaper()) {
             if (PaperLib.isChunkGenerated(e.getLocation())) {
                 growStructure(e);
-            }
-            else {
+            } else {
                 PaperLib.getChunkAtAsync(e.getLocation()).thenRun(() -> growStructure(e));
             }
-        }
-        else {
+        } else {
             if (!e.getLocation().getChunk().isLoaded()) {
                 e.getLocation().getChunk().load();
             }
@@ -73,7 +72,7 @@ public class PlantsListener implements Listener {
             return;
         }
 
-        if (!SlimefunPlugin.getWorldSettingsService().isWorldEnabled(world)) {
+        if (!Slimefun.getWorldSettingsService().isWorldEnabled(world)) {
             return;
         }
 
@@ -96,17 +95,14 @@ public class PlantsListener implements Listener {
                     if (PaperLib.isPaper()) {
                         if (PaperLib.isChunkGenerated(world, chunkX, chunkZ)) {
                             growBush(e, x, z, berry, random, true);
-                        }
-                        else {
+                        } else {
                             PaperLib.getChunkAtAsync(world, chunkX, chunkZ).thenRun(() -> growBush(e, x, z, berry, random, true));
                         }
-                    }
-                    else {
+                    } else {
                         growBush(e, x, z, berry, random, false);
                     }
                 }
-            }
-            else if (random.nextInt(100) < cfg.getInt("chances.TREE")) {
+            } else if (random.nextInt(100) < cfg.getInt("chances.TREE")) {
                 Tree tree = ExoticGarden.getTrees().get(random.nextInt(ExoticGarden.getTrees().size()));
 
                 int chunkX = e.getChunk().getX();
@@ -119,12 +115,10 @@ public class PlantsListener implements Listener {
                     if (PaperLib.isPaper()) {
                         if (PaperLib.isChunkGenerated(world, chunkX, chunkZ)) {
                             pasteTree(e, x, z, tree);
-                        }
-                        else {
+                        } else {
                             PaperLib.getChunkAtAsync(world, chunkX, chunkZ).thenRun(() -> pasteTree(e, x, z, tree));
                         }
-                    }
-                    else {
+                    } else {
                         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> pasteTree(e, x, z, tree));
                     }
                 }
@@ -179,7 +173,7 @@ public class PlantsListener implements Listener {
                             rotatable.setRotation(faces[ThreadLocalRandom.current().nextInt(faces.length)]);
                             blockAbove.setBlockData(rotatable);
 
-                            SkullBlock.setFromHash(blockAbove, berry.getTexture());
+                            PlayerHead.setSkin(blockAbove, PlayerSkin.fromHashCode(berry.getTexture()), true);
                             break;
                         default:
                             e.getLocation().getBlock().setType(Material.PLAYER_HEAD);
@@ -187,7 +181,7 @@ public class PlantsListener implements Listener {
                             s.setRotation(faces[ThreadLocalRandom.current().nextInt(faces.length)]);
                             e.getLocation().getBlock().setBlockData(s);
 
-                            SkullBlock.setFromHash(e.getLocation().getBlock(), berry.getTexture());
+                            PlayerHead.setSkin(e.getLocation().getBlock(), PlayerSkin.fromHashCode(berry.getTexture()), true);
                             break;
                     }
 
@@ -219,8 +213,7 @@ public class PlantsListener implements Listener {
                     case BUSH:
                         if (isPaper) {
                             current.setType(Material.OAK_LEAVES);
-                        }
-                        else {
+                        } else {
                             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> current.setType(Material.OAK_LEAVES));
                         }
                         break;
@@ -230,15 +223,14 @@ public class PlantsListener implements Listener {
                             Rotatable s = (Rotatable) current.getBlockData();
                             s.setRotation(faces[random.nextInt(faces.length)]);
                             current.setBlockData(s);
-                            SkullBlock.setFromHash(current, berry.getTexture());
-                        }
-                        else {
+                            PlayerHead.setSkin(current, PlayerSkin.fromHashCode(berry.getTexture()), true);
+                        } else {
                             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                                 current.setType(Material.PLAYER_HEAD);
                                 Rotatable s = (Rotatable) current.getBlockData();
                                 s.setRotation(faces[random.nextInt(faces.length)]);
                                 current.setBlockData(s);
-                                SkullBlock.setFromHash(current, berry.getTexture());
+                                PlayerHead.setSkin(current, PlayerSkin.fromHashCode(berry.getTexture()), true);
                             });
                         }
                         break;
@@ -249,9 +241,8 @@ public class PlantsListener implements Listener {
                             Rotatable s = (Rotatable) current.getBlockData();
                             s.setRotation(faces[random.nextInt(faces.length)]);
                             current.setBlockData(s);
-                            SkullBlock.setFromHash(current, berry.getTexture());
-                        }
-                        else {
+                            PlayerHead.setSkin(current, PlayerSkin.fromHashCode(berry.getTexture()), true);
+                        } else {
                             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                                 BlockStorage.store(current.getRelative(BlockFace.UP), berry.getItem());
                                 current.setType(Material.OAK_LEAVES);
@@ -259,7 +250,7 @@ public class PlantsListener implements Listener {
                                 Rotatable ss = (Rotatable) current.getRelative(BlockFace.UP).getBlockData();
                                 ss.setRotation(faces[random.nextInt(faces.length)]);
                                 current.getRelative(BlockFace.UP).setBlockData(ss);
-                                SkullBlock.setFromHash(current.getRelative(BlockFace.UP), berry.getTexture());
+                                PlayerHead.setSkin(current.getRelative(BlockFace.UP), PlayerSkin.fromHashCode(berry.getTexture()), true);
                             });
                         }
                         break;
@@ -287,7 +278,7 @@ public class PlantsListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHarvest(BlockBreakEvent e) {
-        if (SlimefunPlugin.getProtectionManager().hasPermission(e.getPlayer(), e.getBlock().getLocation(), ProtectableAction.BREAK_BLOCK)) {
+        if (Slimefun.getProtectionManager().hasPermission(e.getPlayer(), e.getBlock().getLocation(), Interaction.BREAK_BLOCK)) {
             if (e.getBlock().getType().equals(Material.PLAYER_HEAD) || Tag.LEAVES.isTagged(e.getBlock().getType())) {
                 dropFruitFromTree(e.getBlock());
             }
@@ -301,8 +292,7 @@ public class PlantsListener implements Listener {
                         e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), items[random.nextInt(items.length)]);
                     }
                 }
-            }
-            else {
+            } else {
                 ItemStack item = ExoticGarden.harvestPlant(e.getBlock());
 
                 if (item != null) {
@@ -315,7 +305,7 @@ public class PlantsListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDecay(LeavesDecayEvent e) {
-        if (!SlimefunPlugin.getWorldSettingsService().isWorldEnabled(e.getBlock().getWorld())) {
+        if (!Slimefun.getWorldSettingsService().isWorldEnabled(e.getBlock().getWorld())) {
             return;
         }
 
@@ -346,7 +336,7 @@ public class PlantsListener implements Listener {
         if (e.getHand() != EquipmentSlot.HAND) return;
         if (e.getPlayer().isSneaking()) return;
 
-        if (SlimefunPlugin.getProtectionManager().hasPermission(e.getPlayer(), e.getClickedBlock().getLocation(), ProtectableAction.BREAK_BLOCK)) {
+        if (Slimefun.getProtectionManager().hasPermission(e.getPlayer(), e.getClickedBlock().getLocation(), Interaction.BREAK_BLOCK)) {
             ItemStack item = ExoticGarden.harvestPlant(e.getClickedBlock());
 
             if (item != null) {
@@ -406,10 +396,10 @@ public class PlantsListener implements Listener {
                     Block fruit = block.getRelative(x, y, z);
                     if (fruit.isEmpty()) continue;
 
+
                     Location loc = fruit.getLocation();
                     SlimefunItem check = BlockStorage.check(loc);
                     if (check == null) continue;
-
                     for (Tree tree : ExoticGarden.getTrees()) {
                         if (check.getId().equalsIgnoreCase(tree.getFruitID())) {
                             BlockStorage.clearBlockInfo(loc);
