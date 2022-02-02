@@ -71,7 +71,8 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
             case HOPPER:
             case TRAPPED_CHEST:
             case ENDER_CHEST:
-            case CAULDRON:
+            //Apply the fix for https://github.com/TheBusyBiscuit/ExoticGarden/pull/209
+            //case CAULDRON:
             case SHULKER_BOX:
                 return true;
             default:
