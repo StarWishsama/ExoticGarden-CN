@@ -7,10 +7,12 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Rotatable;
 
 import java.io.File;
@@ -145,7 +147,7 @@ public class Schematic {
                                 }
                             }
                             else if (material == Material.PLAYER_HEAD) {
-                                Rotatable s = (Rotatable) block.getBlockData();
+                                Rotatable s = (Rotatable)Bukkit.getServer().createBlockData(material) ;
                                 s.setRotation(faces[ThreadLocalRandom.current().nextInt(faces.length)]);
                                 block.setBlockData(s);
 
