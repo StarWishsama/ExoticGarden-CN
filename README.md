@@ -1,9 +1,5 @@
 # 异域花园（ExoticGarden）
 
-本仓库已停止更新
-
-可以前往 https://github.com/GuizhanCraft/ExoticGarden-CN/
-
 异域花园（ExoticGarden）是 [粘液科技](https://github.com/StarWishsama/Slimefun4) 的扩展插件，它带来了各种新的植物，水果，蔬菜和食品。
 https://dev.bukkit.org/projects/exotic-garden
 
